@@ -88,22 +88,6 @@
         />
       </div>
     </footer>
-    <UModal v-model="confirmationModal">
-      <div class="p-4 space-y-4">
-        <p>Publish code</p>
-        <UFormGroup label="File name">
-          <UInput size="lg" placeholder="File name" v-model="snippet.title" />
-        </UFormGroup>
-        <UAlert
-          icon="i-heroicons-exclamation-triangle"
-          title="Heads up!"
-          description="This snippet will be public and anyone will be able to see it. Make sure you don't include any sensitive information."
-        />
-        <UButton @click="confirmPublish" size="lg" block color="black"
-          >Publish</UButton
-        >
-      </div>
-    </UModal>
   </main>
 </template>
 

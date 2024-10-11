@@ -1,6 +1,11 @@
 <template>
   <main class="flex flex-col h-screen text-white">
-    <AppNavbar @publish="publishSnippet" @copy="copySnippet" @download="downloadSnippet" publishEnabled />
+    <AppNavbar
+      @publish="publishSnippet"
+      @copy="copySnippet"
+      @download="downloadSnippet"
+      publishEnabled
+    />
     <div class="flex flex-1">
       <AppSidebar />
       <ClientOnly>
@@ -83,26 +88,11 @@
       </div>
     </footer>
     <UModal v-model="confirmationModal">
-      <div class="p-4 space-y-4">
-        <p>Publish code</p>
-        <UFormGroup label="File name">
-          <UInput size="lg" placeholder="File name" v-model="snippet.title" />
-        </UFormGroup>
-        <UAlert
-          icon="i-heroicons-exclamation-triangle"
-          title="Heads up!"
-          description="This snippet will be public and anyone will be able to see it. Make sure you don't include any sensitive information."
-        />
-        <UButton
-          @click="confirmPublish"
-          size="lg"
-          block
-          color="black"
-          :loading="loading"
-          :disabled="loading"
-          >Publish</UButton
-        >
-      </div>
+      <AppPublishCode
+        v-if="confirmationModal"
+        :snippet="snippet"
+        @close="confirmationModal = false"
+      />
     </UModal>
   </main>
 </template>
@@ -125,7 +115,7 @@ const {
   publishSnippet,
   confirmPublish,
   copySnippet,
-  downloadSnippet
+  downloadSnippet,
 } = useEditor();
 
 useHead({
