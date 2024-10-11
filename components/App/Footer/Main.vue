@@ -1,6 +1,6 @@
 <template>
   <footer
-    class="border-t bg-gray-900 border-white/10 flex items-center justify-between"
+    class="flex justify-between items-center bg-gray-900 border-t border-white/10"
   >
     <div
       class="flex items-center divide-x divide-white/10 text-xs [&>div]:p-2 border-r border-white/10"
@@ -19,7 +19,7 @@
       </div>
     </div>
     <div
-      class="flex items-center divide-x divide-white/10 text-xs border-l border-white/10"
+      class="flex items-center text-xs border-l divide-x divide-white/10 border-white/10"
     >
       <UTooltip
         :text="`Toggle minimap (${
@@ -28,8 +28,12 @@
         :shortcuts="['CTRL', 'M']"
         :popper="{ placement: 'top' }"
       >
-        <button class="p-2 hover:bg-gray-950" @click="toggleMinimap">
-          <Icon name="i-heroicons-map" class="h-4 w-4" />
+        <button
+          class="p-2 hover:bg-gray-950"
+          @click="toggleMinimap"
+          :disabled="!editorRef"
+        >
+          <Icon name="i-heroicons-map" class="w-4 h-4" />
         </button>
       </UTooltip>
       <UTooltip
@@ -37,12 +41,16 @@
         :shortcuts="['CTRL', 'F']"
         :popper="{ placement: 'top' }"
       >
-        <button class="p-2 hover:bg-gray-950" @click="formatCode">
-          <Icon name="i-lucide-sparkles" class="h-4 w-4" />
+        <button
+          class="p-2 hover:bg-gray-950"
+          @click="formatCode"
+          :disabled="!editorRef"
+        >
+          <Icon name="i-lucide-sparkles" class="w-4 h-4" />
         </button>
       </UTooltip>
       <USelectMenu
-        v-model="selectedLanguage"
+        v-model="snippet.language"
         :options="languages"
         class="w-48"
         searchable
@@ -53,7 +61,16 @@
     </div>
   </footer>
 </template>
-
-<script setup></script>
-
-<style></style>
+<script setup lang="ts">
+const {
+  toggleMinimap,
+  formatCode,
+  languages,
+  letterCount,
+  lineCount,
+  wordCount,
+  editorRef,
+  snippet,
+  MONACO_EDITOR_OPTIONS,
+} = useEditor();
+</script>

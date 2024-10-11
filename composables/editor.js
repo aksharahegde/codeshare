@@ -2,6 +2,8 @@ import githubTheme from "@/assets/github-dark.json";
 import languages from "@/assets/languages";
 import fileExtensions from "@/assets/file-extensions";
 
+const DEFAULT_TITLE = "untitled.txt";
+
 export const useEditor = () => {
   const { copy } = useClipboard();
   const MONACO_EDITOR_OPTIONS = ref({
@@ -28,23 +30,23 @@ export const useEditor = () => {
   });
   const snippet = useState("snippet", () => {
     return {
-      title: "untitled.txt",
+      title: DEFAULT_TITLE,
       body: "",
       language: "plaintext",
     };
   });
 
+  const toast = useToast();
   const confirmationModal = ref(false);
   const loading = ref(false);
-  const toast = useToast();
-  const selectedLanguage = ref("plaintext");
+  const selectedLanguage = ref(snippet.value.language);
   const lineCount = ref(0);
   const editorRef = shallowRef();
 
   watchEffect(() => {
     const language = snippet.value.language;
     if (fileExtensions[language]) {
-      const originalFilename = snippet.value.title.split('.')[0];
+      const originalFilename = snippet.value.title.split(".")[0];
       snippet.value.title = `${originalFilename}${fileExtensions[language]}`;
     }
   });
@@ -62,10 +64,7 @@ export const useEditor = () => {
     return words ? words.length : 0;
   });
 
-  const letterCount = computed(() => {
-    const text = snippet.value.body;
-    return text.length;
-  });
+  const letterCount = computed(() => snippet.value.body.length);
 
   const onChange = () => {
     if (!editorRef.value) return;
@@ -99,7 +98,6 @@ export const useEditor = () => {
   const confirmPublish = async () => {
     try {
       loading.value = true;
-
       const data = await $fetch("/api/codebin", {
         method: "POST",
         body: snippet.value,
@@ -132,7 +130,7 @@ export const useEditor = () => {
     const blob = new Blob([snippet.value.body], {
       type: "text/plain;charset=utf-8",
     });
-    saveAs(blob, snippet.value.title || "untitled.txt");
+    saveAs(blob, snippet.value.title || DEFAULT_TITLE);
   };
 
   function saveAs(blob, fileName) {

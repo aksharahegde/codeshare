@@ -27,67 +27,7 @@
         </vue-monaco-editor>
       </ClientOnly>
     </div>
-    <footer
-      class="flex justify-between items-center bg-gray-900 border-t border-white/10"
-    >
-      <div
-        class="flex items-center divide-x divide-white/10 text-xs [&>div]:p-2 border-r border-white/10"
-      >
-        <div>
-          <span class="font-semibold">{{ wordCount }}</span>
-          <span class="text-gray-300"> words</span>
-        </div>
-        <div>
-          <span class="font-semibold">{{ letterCount }}</span>
-          <span class="text-gray-300"> letters</span>
-        </div>
-        <div>
-          <span class="font-semibold">{{ lineCount }}</span>
-          <span class="text-gray-300"> lines</span>
-        </div>
-      </div>
-      <div
-        class="flex items-center text-xs border-l divide-x divide-white/10 border-white/10"
-      >
-        <UTooltip
-          :text="`Toggle minimap (${
-            MONACO_EDITOR_OPTIONS.minimap.enabled ? 'on' : 'off'
-          })`"
-          :shortcuts="['CTRL', 'M']"
-          :popper="{ placement: 'top' }"
-        >
-          <button
-            class="p-2 hover:bg-gray-950"
-            @click="toggleMinimap"
-            :disabled="!editorRef"
-          >
-            <Icon name="i-heroicons-map" class="w-4 h-4" />
-          </button>
-        </UTooltip>
-        <UTooltip
-          text="Format code"
-          :shortcuts="['CTRL', 'F']"
-          :popper="{ placement: 'top' }"
-        >
-          <button
-            class="p-2 hover:bg-gray-950"
-            @click="formatCode"
-            :disabled="!editorRef"
-          >
-            <Icon name="i-lucide-sparkles" class="w-4 h-4" />
-          </button>
-        </UTooltip>
-        <USelectMenu
-          v-model="snippet.language"
-          :options="languages"
-          class="w-48"
-          searchable
-          id="language-select"
-          searchable-placeholder="Search a language..."
-          :ui="{ rounded: '' }"
-        />
-      </div>
-    </footer>
+    <AppFooterMain />
   </main>
 </template>
 
@@ -107,27 +47,21 @@ const {
   copySnippet,
   downloadSnippet,
 } = useEditor();
+
 const route = useRoute();
-const { data: snippet } = await useFetch(`/api/codebin/${route.params.id}`);
+const { data } = await useFetch(`/api/codebin/${route.params.id}`);
 
-const wordCount = computed(() => {
-  const text = snippet.value.body;
-  const words = text.match(/\w+/g);
-  return words ? words.length : 0;
-});
-
-const letterCount = computed(() => {
-  const text = snippet.value.body;
-  return text.length;
-});
+const title = ref(data.value.title);
+const snippet = useState("snippet");
+snippet.value = data.value;
 
 useHead({
-  title: `${snippet.value.title} - Codeshare.app`,
+  title: `${title.value} - Codeshare.app`,
   meta: [
     {
       hid: "description",
       name: "description",
-      content: `Codeshare.app - ${snippet.value.title}`,
+      content: `Codeshare.app - ${title.value}`,
     },
   ],
 });
