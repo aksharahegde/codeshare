@@ -1,29 +1,24 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
-
 export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: [
     "@nuxt/ui",
-    "nuxt-icon",
-    "@nuxtjs/google-fonts",
+    "@nuxt/fonts",
     "@nuxtjs/fontaine",
     "@vueuse/nuxt",
-    "nuxt-rate-limit"
+    "nuxt-rate-limit",
   ],
-  ui: {
-    icons: ["heroicons", "lucide"],
-  },
   colorMode: {
     preference: "dark",
   },
   nuxtRateLimit: {
     routes: {
-      '/api/*': {
+      "/api/*": {
         maxRequests: 5,
         intervalSeconds: 120,
       },
     },
   },
+  compatibilityDate: "2024-10-11",
   app: {
     head: {
       script: [
@@ -33,12 +28,6 @@ export default defineNuxtConfig({
           async: true,
         },
       ],
-    },
-  },
-  googleFonts: {
-    display: "swap",
-    families: {
-      Inter: [400, 500, 600, 700, 800, 900],
     },
   },
 });

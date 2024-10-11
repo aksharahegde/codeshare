@@ -7,10 +7,10 @@
         <vue-monaco-editor
           v-model:value="snippet.body"
           theme="vs-dark"
+          class="flex-1"
           :options="MONACO_EDITOR_OPTIONS"
           :language="snippet.language"
           @mount="handleMount"
-          class="flex-1"
           @change="onChange"
         >
           <template #default>

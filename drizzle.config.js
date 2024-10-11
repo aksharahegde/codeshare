@@ -1,4 +1,5 @@
 import "dotenv/config";
+
 const { TURSO_DB_URL, TURSO_DB_TOKEN } = process.env;
 
 const turso = {
